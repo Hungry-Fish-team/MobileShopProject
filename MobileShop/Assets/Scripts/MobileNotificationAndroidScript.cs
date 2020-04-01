@@ -8,8 +8,8 @@ public class MobileNotificationAndroidScript : MonoBehaviour
 #if UNITY_ANDROID
 
     public GameNotificationsManager gameNotificationManager;
-
     public GameManager gameManager;
+    public LoadPersonInfoFromFilesScript loadPersonInfoFromFilesScript;
 
     public AndroidNotificationChannel notificationChannel;
     public GameNotificationChannel notificationChannelSecondVer;
@@ -25,6 +25,7 @@ public class MobileNotificationAndroidScript : MonoBehaviour
     private void InitializationAllObjects()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        loadPersonInfoFromFilesScript = GameObject.Find("GameManager").GetComponent<LoadPersonInfoFromFilesScript>();
     }
 
     private void CreateNotificationChannel()
@@ -56,12 +57,12 @@ public class MobileNotificationAndroidScript : MonoBehaviour
 
         AndroidNotificationCenter.SendNotification(notification, notificationChannel.Id);
 
-        gameManager.personNotification.Add(new GameManager.notificationObject(textOfMessage, DateTime.Now.AddSeconds(time).ToShortDateString() + " " + DateTime.Now.AddSeconds(time).ToShortTimeString()));
+        loadPersonInfoFromFilesScript.personNotification.Add(new LoadPersonInfoFromFilesScript.notificationObject(textOfMessage, DateTime.Now.AddSeconds(time).ToShortDateString() + " " + DateTime.Now.AddSeconds(time).ToShortTimeString()));
     }
 
     public void CreateAndSentNotificationSecondVer(string title, string textOfMessage, double time) /// Рабочая версия
     {
-        gameManager.personNotification.Add(new GameManager.notificationObject(textOfMessage, DateTime.Now.AddSeconds(time).ToShortDateString() + " " + DateTime.Now.AddSeconds(time).ToShortTimeString()));
+        loadPersonInfoFromFilesScript.personNotification.Add(new LoadPersonInfoFromFilesScript.notificationObject(textOfMessage, DateTime.Now.AddSeconds(time).ToShortDateString() + " " + DateTime.Now.AddSeconds(time).ToShortTimeString()));
 
         IGameNotification notification = gameNotificationManager.CreateNotification();
         if (notification != null)

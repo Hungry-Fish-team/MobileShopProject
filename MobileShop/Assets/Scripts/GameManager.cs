@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     public LoadScript loadScript;
     public MobileNotificationAndroidScript mobileNotificationAndroidScript;
+    public LoadPersonInfoFromFilesScript loadPersonInfoFromFilesScript;
 
     public GameObject startWindow, mainWindow, catalogWindow, busketWindow, profileWindow, itemWindow, buyItemWindow, notificationWindow;
     public GameObject lowerPanel, topPanel;
@@ -35,224 +36,6 @@ public class GameManager : MonoBehaviour
     public GameObject objectForItemsToBuy;
     public GameObject objectForProfileInfo;
     public GameObject objectForNotification;
-
-    public List<ItemScript> sortingListOfItem;
-    public List<string> sortingListOfType;
-    public List<string> personBusket, personMarks;
-
-    public class notificationObject
-    {
-        public string message;
-        public string date;
-
-        public notificationObject(){}
-
-        public notificationObject(string newMessage, string newDate)
-        {
-            this.message = newMessage;
-            this.date = newDate;
-        }
-
-    }
-
-    public List<notificationObject> personNotification = new List<notificationObject>();
-
-    public string fileForPersonBusket;
-    public string fileForMarkSave;
-    public string fileForNotificationSave;
-
-    private void LoadFiles()
-    {
-        if (!File.Exists(Application.persistentDataPath + "/fileForPersonBusket.json"))
-        {
-            CreateFilesForSave("/fileForPersonBusket.json");
-        }
-        fileForPersonBusket = Application.persistentDataPath + "/fileForPersonBusket.json";
-        if (!File.Exists(Application.persistentDataPath + "/fileForMarkSave.json"))
-        {
-            CreateFilesForSave("/fileForMarkSave.json");
-        }
-        fileForMarkSave = Application.persistentDataPath + "/fileForMarkSave.json";
-        if (!File.Exists(Application.persistentDataPath + "/fileForNotificationSave.json"))
-        {
-            CreateFilesForSave("/fileForNotificationSave.json");
-        }
-        fileForNotificationSave = Application.persistentDataPath + "/fileForNotificationSave.json";
-    }
-
-    private void CreateFilesForSave(string nameOfFile)
-    {
-        FileStream newFile = File.Open(Application.persistentDataPath + nameOfFile, FileMode.OpenOrCreate);
-        newFile.Close();
-        Debug.Log("create" + nameOfFile);
-    }
-
-    public void SaveAllDataToFile()
-    {
-        SavePersonBusket();
-        SavePersonMarks();
-        SavePersonNotification();
-    }
-
-    private void SavePersonBusket()
-    {
-        JSONObject personDATA = new JSONObject();
-        JSONArray personBusketJSON = new JSONArray();
-        if (personBusket.Count == 0)
-        {
-            File.Delete(fileForPersonBusket);
-        }
-        else
-        {
-            for (int i = 0; i < personBusket.Count; i++)
-            {
-                personBusketJSON.Add(personBusket[i]);
-            }
-
-            personDATA.Add("personBusket", personBusketJSON);
-
-            if (File.Exists(fileForPersonBusket))
-            {
-                File.WriteAllText(fileForPersonBusket, personDATA.ToString());
-            }
-        }
-    }
-
-    private void SavePersonMarks()
-    {
-        JSONObject personDATA = new JSONObject();
-        JSONArray personMarksJSON = new JSONArray();
-        if (personMarks.Count == 0)
-        {
-            File.Delete(fileForMarkSave);
-        }
-        else
-        {
-            for (int i = 0; i < personMarks.Count; i++)
-            {
-                personMarksJSON.Add(personMarks[i]);
-            }
-
-            personDATA.Add("personMarks", personMarksJSON);
-
-            if (File.Exists(fileForMarkSave))
-            {
-                File.WriteAllText(fileForMarkSave, personDATA.ToString());
-            }
-        }
-    }
-
-    private void SavePersonNotification()
-    {
-        JSONObject personDATA = new JSONObject();
-
-        if (personNotification.Count == 0)
-        {
-            File.Delete(fileForNotificationSave);
-        }
-        else
-        {
-            for (int i = 0; i < personNotification.Count; i++)
-            {
-                JSONArray personNotificatioJSON = new JSONArray();
-
-                personNotificatioJSON.Add("Message", personNotification[i].message);
-                personNotificatioJSON.Add("Date", personNotification[i].date);
-
-                personDATA.Add("personNotification" + i.ToString(), personNotificatioJSON);
-            }
-
-            if (File.Exists(fileForNotificationSave))
-            {
-                File.WriteAllText(fileForNotificationSave, personDATA.ToString());
-            }
-        }
-    }
-
-    public void LoadAllDataFromFile()
-    {
-        LoadPersonBusket();
-        LoadPersonMarks();
-        LoadPersonNotification();
-    }
-
-    private void LoadPersonBusket()
-    {
-        if ((JSONObject)JSON.Parse(File.ReadAllText(fileForPersonBusket)) != null)
-        {
-            JSONObject personDATA = (JSONObject)JSON.Parse(File.ReadAllText(fileForPersonBusket));
-
-            if (personDATA != null)
-            {
-                for (int i = 0; i < personDATA["personBusket"].Count; i++)
-                {
-                    personBusket.Add(personDATA["personBusket"].AsArray[i]);
-                }
-            }
-        }
-    }
-
-    private void LoadPersonMarks()
-    {
-        if ((JSONObject)JSON.Parse(File.ReadAllText(fileForMarkSave)) != null)
-        {
-            JSONObject personDATA = (JSONObject)JSON.Parse(File.ReadAllText(fileForMarkSave));
-
-            if (personDATA != null)
-            {
-                for (int i = 0; i < personDATA["personMarks"].Count; i++)
-                {
-                    personMarks.Add(personDATA["personMarks"].AsArray[i]);
-                }
-            }
-        }
-    }
-
-    private void LoadPersonNotification()
-    {
-        if ((JSONObject)JSON.Parse(File.ReadAllText(fileForNotificationSave)) != null)
-        {
-            JSONObject personDATA = (JSONObject)JSON.Parse(File.ReadAllText(fileForNotificationSave));
-
-            if (personDATA != null)
-            {
-                for (int i = 0; i < personDATA.Count; i++)
-                {
-                    personNotification.Add(new notificationObject(personDATA["personNotification" + i.ToString()].AsArray[0], personDATA["personNotification" + i.ToString()].AsArray[1]));
-                }
-            }
-        }
-    }
-
-    public void CreateNewNotififcation()
-    {
-        //mobileNotificationAndroidScript.CreateAndSentNotification("Lol", "Privet", 5);
-        mobileNotificationAndroidScript.CreateAndSentNotificationSecondVer("Lol", "Privet", 5);
-        SaveAllDataToFile();
-
-        ChouseMainWindow("mainWindow");
-    }
-
-    public void CloseNotificationWindowAndDeleteAllNotification()
-    {
-        personNotification.Clear();
-        SaveAllDataToFile();
-
-        ChouseMainWindow("mainWindow");
-    }
-
-    public void SendHelpMessage(string helpMessage)
-    {
-        helpMessageText.gameObject.SetActive(true);
-        helpMessageText.text = helpMessage;
-        StartCoroutine(ShowHelpMessage());
-    }
-
-    IEnumerator ShowHelpMessage()
-    {
-        yield return new WaitForSeconds(3f);
-        helpMessageText.gameObject.SetActive(false);
-    }
 
     private void StartSettings()
     {
@@ -272,14 +55,15 @@ public class GameManager : MonoBehaviour
 
         loadScript.LoadFilesFromServer();
 
-        LoadFiles();
-        LoadAllDataFromFile();
+        loadPersonInfoFromFilesScript.LoadFiles();
+        loadPersonInfoFromFilesScript.LoadAllDataFromFile();
     }
 
     private void InitializationAllObjects()
     {
         loadScript = GameObject.Find("GameManager").GetComponent<LoadScript>();
         mobileNotificationAndroidScript = GameObject.Find("GameManager").GetComponent<MobileNotificationAndroidScript>();
+        loadPersonInfoFromFilesScript = GameObject.Find("GameManager").GetComponent<LoadPersonInfoFromFilesScript>();
 
         lowerPanel = GameObject.Find("LowerPanelWithButton");
         topPanel = GameObject.Find("TopPanelWithShopName");
@@ -308,6 +92,36 @@ public class GameManager : MonoBehaviour
         startWindow.GetComponent<Animator>().SetTrigger("CloseStartWindow");
         yield return new WaitForSeconds(1f);
         ChouseMainWindow("mainWindow");
+    }
+
+    public void CreateNewNotififcation()
+    {
+        //mobileNotificationAndroidScript.CreateAndSentNotification("Lol", "Privet", 5);
+        mobileNotificationAndroidScript.CreateAndSentNotificationSecondVer("Lol", "Privet", 5);
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
+
+        ChouseMainWindow("mainWindow");
+    }
+
+    public void CloseNotificationWindowAndDeleteAllNotification()
+    {
+        loadPersonInfoFromFilesScript.personNotification.Clear();
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
+
+        ChouseMainWindow("mainWindow");
+    }
+
+    public void SendHelpMessage(string helpMessage)
+    {
+        helpMessageText.gameObject.SetActive(true);
+        helpMessageText.text = helpMessage;
+        StartCoroutine(ShowHelpMessage());
+    }
+
+    IEnumerator ShowHelpMessage()
+    {
+        yield return new WaitForSeconds(3f);
+        helpMessageText.gameObject.SetActive(false);
     }
 
     private void InputSettings()
@@ -629,7 +443,7 @@ public class GameManager : MonoBehaviour
 
     private void ReloadCountOfNotification()
     {   
-        GameObject.Find("CountMessageText").GetComponent<Text>().text = personNotification.Count.ToString();
+        GameObject.Find("CountMessageText").GetComponent<Text>().text = loadPersonInfoFromFilesScript.personNotification.Count.ToString();
     }
 
     public void BuyItemFunc()
@@ -684,9 +498,9 @@ public class GameManager : MonoBehaviour
 
                         ChouseMainWindow("mainWindow");
 
-                        personBusket.Clear();
+                        loadPersonInfoFromFilesScript.personBusket.Clear();
 
-                        SaveAllDataToFile();
+                        loadPersonInfoFromFilesScript.SaveAllDataToFile();
                     }
                     else
                     {
@@ -788,7 +602,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log(content.name);
         DestroyAllNotificationObjects(content);
-        foreach (notificationObject notObj in personNotification)
+        foreach (LoadPersonInfoFromFilesScript.notificationObject notObj in loadPersonInfoFromFilesScript.personNotification)
         {
             GameObject newNotificationObject = Instantiate(objectForNotification, content);
             newNotificationObject.GetComponent<InfoAboutNotificationScript>().message = notObj.message;
@@ -835,17 +649,17 @@ public class GameManager : MonoBehaviour
         else if (parameterOfItem == "busketsItems")
         {
             FindItemsInBusket();
-            CreateAllPrefabFromItem(sortingListOfItem);
+            CreateAllPrefabFromItem(loadPersonInfoFromFilesScript.sortingListOfItem);
         }
         else if (parameterOfItem == "marksItems")
         {
             FindItemsInMarks();
-            CreateAllPrefabFromItem(sortingListOfItem);
+            CreateAllPrefabFromItem(loadPersonInfoFromFilesScript.sortingListOfItem);
         }
         else
         {
             FindItemByTypes(parameterOfItem);
-            CreateAllPrefabFromItem(sortingListOfItem);
+            CreateAllPrefabFromItem(loadPersonInfoFromFilesScript.sortingListOfItem);
         }
     }
 
@@ -854,11 +668,11 @@ public class GameManager : MonoBehaviour
         ClearSortingList();
         foreach (ItemScript item in loadScript.items)
         {
-            for (int i = 0; i < personBusket.Count; i++)
+            for (int i = 0; i < loadPersonInfoFromFilesScript.personBusket.Count; i++)
             {
-                if (item.name == personBusket[i])
+                if (item.name == loadPersonInfoFromFilesScript.personBusket[i])
                 {
-                    sortingListOfItem.Add(item);
+                    loadPersonInfoFromFilesScript.sortingListOfItem.Add(item);
                     break;
                 }
             }
@@ -870,11 +684,11 @@ public class GameManager : MonoBehaviour
         ClearSortingList();
         foreach (ItemScript item in loadScript.items)
         {
-            for (int i = 0; i < personMarks.Count; i++)
+            for (int i = 0; i < loadPersonInfoFromFilesScript.personMarks.Count; i++)
             {
-                if (item.name == personMarks[i])
+                if (item.name == loadPersonInfoFromFilesScript.personMarks[i])
                 {
-                    sortingListOfItem.Add(item);
+                    loadPersonInfoFromFilesScript.sortingListOfItem.Add(item);
                     break;
                 }
             }
@@ -888,7 +702,7 @@ public class GameManager : MonoBehaviour
         {
             if (typeOfitem.Equals(item.firstTypeItem, System.StringComparison.OrdinalIgnoreCase))
             {
-                sortingListOfItem.Add(item);
+                loadPersonInfoFromFilesScript.sortingListOfItem.Add(item);
             }
         }
 
@@ -896,7 +710,7 @@ public class GameManager : MonoBehaviour
         {
             if (typeOfitem.Equals(item.secondTypeItem, System.StringComparison.OrdinalIgnoreCase))
             {
-                sortingListOfItem.Add(item);
+                loadPersonInfoFromFilesScript.sortingListOfItem.Add(item);
             }
         }
     }
@@ -908,7 +722,7 @@ public class GameManager : MonoBehaviour
         {
             if (typeOfitem.Equals(type, System.StringComparison.OrdinalIgnoreCase))
             {
-                sortingListOfType.Add(type);
+                loadPersonInfoFromFilesScript.sortingListOfType.Add(type);
             }
         }
     }
@@ -931,7 +745,7 @@ public class GameManager : MonoBehaviour
         if (newWindow != "catalogItem")
         {
             FindItemByTypes(textFromSearch);
-            CreateAllPrefabFromItem(sortingListOfItem);
+            CreateAllPrefabFromItem(loadPersonInfoFromFilesScript.sortingListOfItem);
 
             if (textFromSearch == "")
             {
@@ -941,7 +755,7 @@ public class GameManager : MonoBehaviour
         else
         {
             FindTypeByTypes(textFromSearch);
-            LoadAllTypesOfItems(sortingListOfType);
+            LoadAllTypesOfItems(loadPersonInfoFromFilesScript.sortingListOfType);
 
             if (textFromSearch == "")
             {
@@ -952,8 +766,8 @@ public class GameManager : MonoBehaviour
 
     private void ClearSortingList()
     {
-        sortingListOfType.Clear();
-        sortingListOfItem.Clear();
+        loadPersonInfoFromFilesScript.sortingListOfType.Clear();
+        loadPersonInfoFromFilesScript.sortingListOfItem.Clear();
     }
 
     private void CreateAllPrefabFromItem(List<ItemScript> sortingListOfItem)

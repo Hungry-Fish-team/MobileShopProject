@@ -702,6 +702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 192049433}
   - component: {fileID: 192049432}
+  - component: {fileID: 192049437}
   - component: {fileID: 192049434}
   - component: {fileID: 192049435}
   - component: {fileID: 192049436}
@@ -735,6 +736,7 @@ MonoBehaviour:
   pathToFolder: 
   loadScript: {fileID: 0}
   mobileNotificationAndroidScript: {fileID: 0}
+  loadPersonInfoFromFilesScript: {fileID: 0}
   startWindow: {fileID: 1513008042}
   mainWindow: {fileID: 545128197}
   catalogWindow: {fileID: 649698896}
@@ -758,13 +760,6 @@ MonoBehaviour:
     type: 3}
   objectForNotification: {fileID: 5432199679375158759, guid: 752d7bc834e63af428d2a0c56cd43171,
     type: 3}
-  sortingListOfItem: []
-  sortingListOfType: []
-  personBusket: []
-  personMarks: []
-  fileForPersonBusket: 
-  fileForMarkSave: 
-  fileForNotificationSave: 
 --- !u!4 &192049433
 Transform:
   m_ObjectHideFlags: 0
@@ -810,6 +805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameNotificationManager: {fileID: 192049436}
   gameManager: {fileID: 0}
+  loadPersonInfoFromFilesScript: {fileID: 0}
 --- !u!114 &192049436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,6 +820,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 0
   autoBadging: 1
+--- !u!114 &192049437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192049431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6717a46c017cddd408d2311061dd6814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sortingListOfItem: []
+  sortingListOfType: []
+  personBusket: []
+  personMarks: []
+  fileForPersonBusket: 
+  fileForMarkSave: 
+  fileForNotificationSave: 
 --- !u!1 &192928739
 GameObject:
   m_ObjectHideFlags: 0
@@ -4168,7 +4183,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.105000004}
   m_AnchorMax: {x: 1, y: 0.92253166}
-  m_AnchoredPosition: {x: 0, y: -24.999878}
+  m_AnchoredPosition: {x: 0, y: -24.999939}
   m_SizeDelta: {x: 0, y: 0.90002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1087794415

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InfoAboutItem : MonoBehaviour
 {
     public GameManager gameManager;
+    public LoadPersonInfoFromFilesScript loadPersonInfoFromFilesScript;
 
     public ItemScript item;
 
@@ -30,6 +31,7 @@ public class InfoAboutItem : MonoBehaviour
     private void InitializationAllItems()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        loadPersonInfoFromFilesScript = GameObject.Find("GameManager").GetComponent<LoadPersonInfoFromFilesScript>();
 
         //item = gameObject.GetComponent<ItemScript>();
 
@@ -148,36 +150,36 @@ public class InfoAboutItem : MonoBehaviour
     private void AddToBusketThisItem()
     {
         busketButton.GetComponent<Image>().color = Color.red;
-        gameManager.personBusket.Add(item.vendorCode);
-        gameManager.SaveAllDataToFile();
+        loadPersonInfoFromFilesScript.personBusket.Add(item.vendorCode);
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
     }
 
     private void AddToMarkThisItem()
     {
         markButton.GetComponent<Image>().color = Color.red;
-        gameManager.personMarks.Add(item.vendorCode);
-        gameManager.SaveAllDataToFile();
+        loadPersonInfoFromFilesScript.personMarks.Add(item.vendorCode);
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
     }
 
     private void DeleteItemFromBusket()
     {
         busketButton.GetComponent<Image>().color = Color.grey;
-        gameManager.personBusket.RemoveAt(FindThisItemInBusket());
-        gameManager.SaveAllDataToFile();
+        loadPersonInfoFromFilesScript.personBusket.RemoveAt(FindThisItemInBusket());
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
     }
 
     private void DeleteItemFromMark()
     {
         markButton.GetComponent<Image>().color = Color.grey;
-        gameManager.personMarks.RemoveAt(FindThisItemInMark());
-        gameManager.SaveAllDataToFile();
+        loadPersonInfoFromFilesScript.personMarks.RemoveAt(FindThisItemInMark());
+        loadPersonInfoFromFilesScript.SaveAllDataToFile();
     }
 
     private int FindThisItemInBusket()
     {
-        for (int i = 0; i < gameManager.personBusket.Count; i++)
+        for (int i = 0; i < loadPersonInfoFromFilesScript.personBusket.Count; i++)
         {
-            if(item.vendorCode == gameManager.personBusket[i])
+            if(item.vendorCode == loadPersonInfoFromFilesScript.personBusket[i])
             {
                 return i;
             }
@@ -187,9 +189,9 @@ public class InfoAboutItem : MonoBehaviour
 
     private int FindThisItemInMark()
     {
-        for (int i = 0; i < gameManager.personMarks.Count; i++)
+        for (int i = 0; i < loadPersonInfoFromFilesScript.personMarks.Count; i++)
         {
-            if (item.vendorCode == gameManager.personMarks[i])
+            if (item.vendorCode == loadPersonInfoFromFilesScript.personMarks[i])
             {
                 return i;
             }
