@@ -498,7 +498,7 @@ public class GameManager : MonoBehaviour
 
                         ChouseMainWindow("mainWindow");
 
-                        loadPersonInfoFromFilesScript.personBusket.Clear();
+                        loadPersonInfoFromFilesScript.personBusket.Clear(); // Сменить на удаление только купленных товаров
 
                         loadPersonInfoFromFilesScript.SaveAllDataToFile();
                     }
@@ -560,7 +560,18 @@ public class GameManager : MonoBehaviour
         {
             GameObject itemObject = buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).gameObject;
             ItemScript item = itemObject.GetComponent<InfoAboutItemToBuyScript>().item;
-            itemsToMail.Add(new ItemForCheck(item.nameItem, item.vendorCode, item.firstTypeItem, item.secondTypeItem, item.firstCostItem.ToString(), item.secondCostItem.ToString(), itemObject.GetComponent<InfoAboutItemToBuyScript>().chousenSize, item.briefInfoOfItem, item.compositionOfItem, item.manufacturingFirm, itemObject.GetComponent<InfoAboutItemToBuyScript>().summIntText.text.ToString()));
+            itemsToMail.Add(new ItemForCheck(
+                item.nameItem, 
+                item.vendorCode, 
+                item.firstTypeItem, 
+                item.secondTypeItem, 
+                item.firstCostItem.ToString(), 
+                item.secondCostItem.ToString(), 
+                itemObject.GetComponent<InfoAboutItemToBuyScript>().chousenSize, 
+                item.briefInfoOfItem, item.compositionOfItem, 
+                item.manufacturingFirm, 
+                itemObject.GetComponent<InfoAboutItemToBuyScript>().summIntText.text.ToString())
+            );
         }
     }
 
@@ -575,11 +586,14 @@ public class GameManager : MonoBehaviour
     private int ReturnCountItemWithChouseSize()
     {
         int countItemsWithChousenSize = 0;
-        for (int i = 0; i < buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).childCount; i++)
+
+        Transform content = buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0);
+
+        for (int i = 0; i < content.childCount; i++)
         {
-            if (buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).name != "ProfileInfoPrefab(Clone)")
+            if (content.GetChild(i).name != "ProfileInfoPrefab(Clone)")
             {
-                if (buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InfoAboutItemToBuyScript>().chousenSize != "")
+                if (content.GetChild(i).GetComponent<InfoAboutItemToBuyScript>().chousenSize != "")
                 {
                     countItemsWithChousenSize++;
                 }
@@ -613,19 +627,23 @@ public class GameManager : MonoBehaviour
 
     private void DestroyAllItemsToBuy()
     {
-        for (int i = 0; i < buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).childCount; i++)
+        Transform content = buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0);
+
+        for (int i = 0; i < content.childCount; i++)
         {
-            Destroy(buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).gameObject);
-            Debug.Log(buyItemWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).name);
+            Destroy(content.GetChild(i).gameObject);
+            Debug.Log(content.GetChild(i).name);
         }
     }
 
     public void LoadAllTypesOfItems(List<string> typeOfItems)
     {
+        Transform content = catalogWindow.transform.GetChild(1).GetChild(0).GetChild(0);
+
         DestroyAllTypesOfItems();
         for (int i = 0; i < typeOfItems.Count; i++)
         {
-            GameObject newTypeOfItem = Instantiate(objectForTypes, catalogWindow.transform.GetChild(1).GetChild(0).GetChild(0));
+            GameObject newTypeOfItem = Instantiate(objectForTypes, content);
             newTypeOfItem.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = loadScript.typeOfItems.typesOfItem[i];
 
             newTypeOfItem.GetComponent<ChouseTypeOfItemScript>().nameOfType = loadScript.typeOfItems.typesOfItem[i];
@@ -634,9 +652,11 @@ public class GameManager : MonoBehaviour
 
     private void DestroyAllTypesOfItems()
     {
-        for (int i = 0; i < catalogWindow.transform.GetChild(1).GetChild(0).GetChild(0).childCount; i++)
+        Transform content = catalogWindow.transform.GetChild(1).GetChild(0).GetChild(0);
+
+        for (int i = 0; i < content.childCount; i++)
         {
-            Destroy(catalogWindow.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).gameObject);
+            Destroy(content.GetChild(i).gameObject);
         }
     }
 
@@ -695,7 +715,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void FindItemByTypes(string typeOfitem)
+    private void FindItemByTypes(string typeOfitem)  /// Переписать поиск не по слову а по символам 
     {
         ClearSortingList();
         foreach (ItemScript item in loadScript.items)
