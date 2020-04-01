@@ -40,9 +40,18 @@ public class LoadMainWindowScript : MonoBehaviour
             for (int i = 0; i < loadScript.typeOfItems.nameOfCategoryForMainWindow.Count; i++)
             {
                 GameObject newPrefabOfItemForMainWindow = Instantiate(prefabOfElementOfMainWindow, ourContent);
-                newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().nameOfCategory = loadScript.typeOfItems.nameOfCategoryForMainWindow[i];
-                newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().secondNameOfCategory = loadScript.typeOfItems.secondNameOfCategoryForMainWindow[i];
-                newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().imageOfCategory = loadScript.typeOfItems.imageOfCategoryForMainWindow[i];
+                if (i < loadScript.typeOfItems.nameOfCategoryForMainWindow.Count)
+                {
+                    newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().nameOfCategory = loadScript.typeOfItems.nameOfCategoryForMainWindow[i];
+                }
+                if (i < loadScript.typeOfItems.secondNameOfCategoryForMainWindow.Count)
+                {
+                    newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().secondNameOfCategory = loadScript.typeOfItems.secondNameOfCategoryForMainWindow[i];
+                }
+                if (i < loadScript.typeOfItems.imageOfCategoryForMainWindow.Count)
+                {
+                    newPrefabOfItemForMainWindow.GetComponent<InfoAboutCategoryScript>().imageOfCategory = loadScript.typeOfItems.imageOfCategoryForMainWindow[i];
+                }
             }
 
             isElementsLoaded = true;
